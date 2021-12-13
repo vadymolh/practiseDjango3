@@ -1,0 +1,24 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    
+    <title>BLOG</title>
+</head>
+<body text="#c5cae9" background="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlY7AzbodeGviBa5Wvz-EaIRuWY3R2vF5ZeQ&usqp=CAU"
+background-size="100% 100%"
+color="#fff"
+background-repeat="no-repeat">
+    <h1>Welcome to my blog!</h1>
+    <p>Today is the day</p>
+    {% for post in posts%}
+        <h1><a href="">{{ post.title|upper }}</a></h1>
+        <br>
+        <img src ='{{ post.img }}' >
+        <p>{{ post.text|linebreaksbr|truncatechars:100 }}</p>
+        <br><br>
+    {% endfor %}
+</body>
+</html>
+    
