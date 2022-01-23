@@ -12,8 +12,8 @@ from .models import Post, PostCategory
 def main_page(request):
     if request.user.is_authenticated:
         posts = Post.objects.all().order_by('published_date')
-        categories = PostCategory.objects.all()
     else: posts = ""
+    categories = PostCategory.objects.all()
     context = {
         'posts': posts,
         'sidebar': categories
@@ -21,6 +21,10 @@ def main_page(request):
     return render(request, 'main_page.html', context)
 
 def single_slug(request, single_slug):
+    categories = [cat.category_slug  for cat in PostCategory.objects.all()]
+    if single_slug in categories:
+        category_posts = Post.objects.filter(post_category__category_slug=single_slug)
+        return render(request, 'category.html', {'posts':category_posts})
     posts_slug = [ p.post_slug for p in Post.objects.all()]
     if single_slug in posts_slug:
         post = Post.objects.get(post_slug=single_slug)

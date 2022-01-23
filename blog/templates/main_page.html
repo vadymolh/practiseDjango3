@@ -30,17 +30,8 @@
             </div>
       
     {% endfor %}
-    <div class="col s12 m2 l2">
-      <ul class="collapsible">
-        {% for cat in sidebar %}
-        <li>
-          <div class="collapsible-header">{{ cat.category_name }}</div>
-          <div class="collapsible-body"><span>{{ cat.category_info }}</span></div>
-        </li>
-        {% endfor %}
-      </ul>
-    </div>
-    </div>
+    
+    {% include "sidebar.html" %}
 </div>
 </body>
 
