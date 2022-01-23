@@ -1,0 +1,15 @@
+{% extends 'navbar.html' %}
+
+{% block content %}
+    <div class="container">
+        <form method="POST">
+            {% csrf_token %}
+            {{form.as_p}}
+            <button class="btn waves-effect waves-light" type="submit">Зареєструватися 
+            <i class="material-icons">add</i></button>
+        </form>
+        <p>Якщо ви вже маєте аккаунт то <a href="/login"><strong>залогіньтесь</strong>
+        </a></p>
+    </div>
+    
+    {% endblock %}

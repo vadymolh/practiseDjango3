@@ -1,24 +1,47 @@
-{% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset='utf-8'>
-    
-    <title>BLOG</title>
-</head>
-<body text="#c5cae9" background="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlY7AzbodeGviBa5Wvz-EaIRuWY3R2vF5ZeQ&usqp=CAU"
-background-size="100% 100%"
-color="#fff"
-background-repeat="no-repeat">
-    <h1>Welcome to my blog!</h1>
-    <p>Today is the day</p>
-    {% for post in posts%}
-        <h1><a href="">{{ post.title|upper }}</a></h1>
-        <br>
-        <img src ='{{ post.img }}' >
-        <p>{{ post.text|linebreaksbr|truncatechars:100 }}</p>
-        <br><br>
+{% extends 'navbar.html' %}
+
+{% block content %}
+<script> 
+  M.AutoInit();
+  document.addEventListener('DOMContentLoaded', function() {
+  var elems = document.querySelectorAll('.collapsible');
+  console.log(elems);
+  var instances = M.Collapsible.init(elems);
+  });
+</script>
+<div class="container">
+
+    <div class="row">
+    {% for post in posts %}
+        
+            <div class="col s12 m5 l5">
+              <div class="card hoverable large indigo lighten-3">
+                <div class="card-image">
+                  <img src ='{{ post.img }}'>
+                  <span class="card-title red accent-3">{{ post.title|upper }}</span>
+                </div>
+                <div class="card-content cyan-text text-darken-4">
+                  <p>{{ post.text|linebreaksbr|truncatechars:100 }}</p>
+                </div>
+                <div class="card-action">
+                  <a href="/{{ post.post_slug }}">Дивитись далі...</a>
+                </div>
+              </div>
+            </div>
+      
     {% endfor %}
+    <div class="col s12 m2 l2">
+      <ul class="collapsible">
+        {% for cat in sidebar %}
+        <li>
+          <div class="collapsible-header">{{ cat.category_name }}</div>
+          <div class="collapsible-body"><span>{{ cat.category_info }}</span></div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    </div>
+</div>
 </body>
-</html>
-    
+
+{% endblock %}
