@@ -12,8 +12,20 @@
 <body >
     <nav>
         <div class="nav-wrapper indigo lighten-">
-          <a href="/" class="brand-logo yellow-text text-darken-4">Pokesite</a>
+          <a href="/" class="brand-logo col s2 m2 l2 yellow-text text-darken-4">Pokesite</a>
           <ul id="nav-mobile" class="right hide-on-med-and-down yellow-text text-darken-4">
+            <li>
+                <form class="" id="search_nav" method=POST action="{% url 'search_post' %}">
+                    {% csrf_token %}
+                    <input type="search" name="searchpost"
+                    placeholder="Шукати статтю">
+                </form>
+            </li>
+            <li>
+                <button class="btn waves-effect waves-light"
+                 form="search_nav"
+                 type="submit" >Шукати</button>
+            </li>
             <li class="yellow-text text-darken-4"><a href="/">Home</a></li>
             {% if not user.is_authenticated %}
             <li class="yellow-text text-darken-4"><a href="/login">Увійти</a></li>

@@ -1,4 +1,5 @@
 # -*- codding: utf-8 -*-
+import re
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
@@ -19,6 +20,14 @@ def main_page(request):
         'sidebar': categories
     }
     return render(request, 'main_page.html', context)
+
+def search_post(request):
+    if request.method == "POST":
+        searched = request.POST.get('searchpost')
+        posts = Post.objects.filter(title__icontains=searched)    
+    return render(request, 
+                  "search_result.html", 
+                  {"posts": posts})
 
 def single_slug(request, single_slug):
     sidebar = PostCategory.objects.all()
