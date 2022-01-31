@@ -22,12 +22,14 @@ def main_page(request):
     return render(request, 'main_page.html', context)
 
 def search_post(request):
+    posts = None
     if request.method == "POST":
         searched = request.POST.get('searchpost')
         posts = Post.objects.filter(title__icontains=searched)    
+    sidebar = PostCategory.objects.all()
     return render(request, 
                   "search_result.html", 
-                  {"posts": posts})
+                  {"posts": posts, "sidebar": sidebar })
 
 def single_slug(request, single_slug):
     sidebar = PostCategory.objects.all()

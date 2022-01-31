@@ -1,6 +1,7 @@
 {% extends 'navbar.html' %}
 
 {% block content %}
+{% load static %}
 <script> 
     M.AutoInit();
     document.addEventListener('DOMContentLoaded', function() {
@@ -18,7 +19,7 @@
             <div class="col s12 m5 l5">
               <div class="card hoverable large indigo lighten-3">
                 <div class="card-image">
-                  <img src ='{{ post.img }}'>
+                  <img src ='/{{ post.img }}'>
                   <span class="card-title red accent-3">{{ post.title|upper }}</span>
                 </div>
                 <div class="card-content cyan-text text-darken-4">
