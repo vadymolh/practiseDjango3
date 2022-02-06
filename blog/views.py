@@ -8,13 +8,27 @@ from django.contrib import messages
 from django.views.defaults import page_not_found
 from django.http import Http404
 from .models import Post, PostCategory
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 # Create your views here.
+def paginate(request, posts):
+    page = request.GET.get('page')
+    paginator = Paginator(posts, 2)
+    try:
+        posts_page = paginator.page(page)
+    except PageNotAnInteger:
+        posts_page = paginator.page(1)
+    except EmptyPage:
+        posts_page = paginator.page(paginator.num_pages)
+    return posts_page
+
+
 def main_page(request):
     if request.user.is_authenticated:
         posts = Post.objects.all().order_by('published_date')
     else: posts = ""
     categories = PostCategory.objects.all()
+    posts = paginate(request, list(posts))
     context = {
         'posts': posts,
         'sidebar': categories
@@ -29,7 +43,7 @@ def search_post(request):
     sidebar = PostCategory.objects.all()
     return render(request, 
                   "search_result.html", 
-                  {"posts": posts, "sidebar": sidebar })
+                  {"sidebar": sidebar })
 
 def single_slug(request, single_slug):
     sidebar = PostCategory.objects.all()
