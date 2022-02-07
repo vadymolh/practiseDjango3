@@ -1,0 +1,21 @@
+{% extends 'navbar.html' %}
+
+{% block content %}
+{% load static %}
+    <div class="container">
+        <h3>Створіть свою статтю</h3>
+        <form method="POST" >
+            {% csrf_token %}
+            <p>Заголовок:</p>
+            <p> {{ post_form.title }} </p>
+            <p>Зображення:</p>
+            <p> {{ post_form.img }} </p>
+            <p>Текст статті: </p>
+            <p> {{ post_form.text }} </p>
+            <p>URL посилання на статтю</p>
+            <p> {{ post_form.post_slug }} </p>
+            <button class="btn waves-effect waves-light" 
+             type="submit">Підтвердити</button>
+        </form>
+    </div>
+{% endblock %}

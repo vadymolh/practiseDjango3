@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.views.defaults import page_not_found
 from django.http import Http404
 from .models import Post, PostCategory
+from .forms import AddPostForm
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 # Create your views here.
@@ -34,6 +35,28 @@ def main_page(request):
         'sidebar': categories
     }
     return render(request, 'main_page.html', context)
+
+def add_post(request):
+    add_post_form=None
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            add_post_form = AddPostForm(request.POST)
+            if add_post_form.is_valid():
+                print("Valid!")
+                url = request.POST.get('post_slug')
+                new_post = add_post_form.save()
+                new_post.save()
+                print(url)
+                return redirect(f"/{url}")
+            else: 
+                print("unValid!")
+        else:
+            add_post_form = AddPostForm()
+    context = {
+        'post_form': add_post_form
+    }
+    return render(request, 'add_post.html', context)
+
 
 def search_post(request):
     posts = None
