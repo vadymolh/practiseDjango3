@@ -40,7 +40,7 @@ def add_post(request):
     add_post_form=None
     if request.user.is_authenticated:
         if request.method == "POST":
-            add_post_form = AddPostForm(request.POST)
+            add_post_form = AddPostForm(request.POST, request.FILES)
             if add_post_form.is_valid():
                 print("Valid!")
                 url = request.POST.get('post_slug')
@@ -84,8 +84,6 @@ def single_slug(request, single_slug):
     else:
         raise Http404
         #page_not_found(request, 'Article not found!')
-
-
 
 
 def register(request):

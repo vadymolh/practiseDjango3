@@ -15,7 +15,10 @@ class Post(models.Model):
     title = models.CharField(max_length=40)
     text = models.TextField()
     created_date = models.DateTimeField(default=timezone.now)
-    img = models.ImageField(upload_to='blog/static/img')
+    img = models.ImageField(upload_to='blog/static/img',
+        height_field=None,
+        width_field=None,
+        max_length=100)
     published_date = models.DateTimeField(null=True, blank=True)
     post_slug = models.CharField(max_length=80, default="default_post")
     post_category = models.ForeignKey(PostCategory, default=1, on_delete=models.SET_DEFAULT)
