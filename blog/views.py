@@ -7,8 +7,8 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.views.defaults import page_not_found
 from django.http import Http404
-from .models import Post, PostCategory
-from .forms import AddPostForm
+from .models import Post, PostCategory, Comment
+from .forms import AddPostForm, AddComment
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 # Create your views here.
@@ -66,7 +66,25 @@ def search_post(request):
     sidebar = PostCategory.objects.all()
     return render(request, 
                   "search_result.html", 
-                  {"sidebar": sidebar })
+                  {"sidebar": sidebar,
+                   "posts": posts})
+
+def post_comment(request, post):
+    if request.method == 'POST':
+        form = AddComment(request.POST or None)
+        if form.is_valid():
+            content = request.POST.get('content')
+            comment = Comment.objects.create(post=post,
+                                             author=request.user,
+                                             content=content)
+            comment.save()
+            return redirect(f'/{post.post_slug}')
+        else:
+            return redirect(f'/{post.post_slug}')
+    else:
+        form = AddComment()
+        return form
+
 
 def single_slug(request, single_slug):
     sidebar = PostCategory.objects.all()
@@ -78,8 +96,12 @@ def single_slug(request, single_slug):
     posts_slug = [ p.post_slug for p in Post.objects.all()]
     if single_slug in posts_slug:
         post = Post.objects.get(post_slug=single_slug)
+        comments = Comment.objects.filter(post=post)
+        form = post_comment(request, post)
         context = {'post': post,
-                   'sidebar': sidebar}
+                   'sidebar': sidebar,
+                   'comment_form': form,
+                   'comments': comments}
         return render(request, 'post_view.html', context)
     else:
         raise Http404

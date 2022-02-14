@@ -1,6 +1,7 @@
 # -*- codding: utf-8 -*-
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 class PostCategory(models.Model):
     category_name = models.CharField(max_length=80)
@@ -27,6 +28,18 @@ class Post(models.Model):
         self.save()
     def __str__(self):
         return self.title + ' ' + str(self.created_date)
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post,
+                             on_delete=models.CASCADE,
+                             related_name='comments')
+    author = models.ForeignKey(User,
+                               on_delete=models.CASCADE)
+    content = models.TextField(max_length=300)
+    date_posted = models.DateTimeField(default=timezone.now)
+    def __str__(self):
+        return self.content
+
 
 
 
