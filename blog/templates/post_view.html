@@ -19,6 +19,17 @@
             </div>
             {% include "sidebar.html" %}
         </div>
+        {% if user.is_authenticated %}
+        <div class="row">
+            <form action="{% url 'like_post' post.id%}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn" value="{{post.id}}" name="post_id">
+                    <i class="medium material-icons">thumb_up</i>
+                </button>
+            </form>
+            <strong> {{ likes_num }} Like{{ likes_num|pluralize }}</strong>
+            
+        </div>
         <div class = "row">
             <form method="POST">
                 {% csrf_token %}
@@ -27,6 +38,7 @@
              type="submit">Опублікувати</button>
             </form>
         </div>
+        {% endif %}
         {% for comment in comments %}
             <div class="row">
                 <p>{{comment}}</p>

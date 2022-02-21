@@ -23,9 +23,12 @@ class Post(models.Model):
     published_date = models.DateTimeField(null=True, blank=True)
     post_slug = models.CharField(max_length=80, default="default_post")
     post_category = models.ForeignKey(PostCategory, default=1, on_delete=models.SET_DEFAULT)
+    likes =models.ManyToManyField(User, related_name ="post_like")
     def publish(self):
         self.published_date = timezone.now()
         self.save()
+    def get_likes_number(self):
+        return self.likes.count()
     def __str__(self):
         return self.title + ' ' + str(self.created_date)
 

@@ -85,6 +85,13 @@ def post_comment(request, post):
         form = AddComment()
         return form
 
+def like_post(request, pk):
+    post = Post.objects.get(id=request.POST['post_id'])
+    if post.likes.filter(id=request.user.id).exists():
+        post.likes.remove(request.user)
+    else:
+        post.likes.add(request.user)
+    return redirect(f'/{post.post_slug}')
 
 def single_slug(request, single_slug):
     sidebar = PostCategory.objects.all()
@@ -96,12 +103,14 @@ def single_slug(request, single_slug):
     posts_slug = [ p.post_slug for p in Post.objects.all()]
     if single_slug in posts_slug:
         post = Post.objects.get(post_slug=single_slug)
+        likes_num = post.get_likes_number()
         comments = Comment.objects.filter(post=post)
         form = post_comment(request, post)
         context = {'post': post,
                    'sidebar': sidebar,
                    'comment_form': form,
-                   'comments': comments}
+                   'comments': comments,
+                   'likes_num': likes_num}
         return render(request, 'post_view.html', context)
     else:
         raise Http404
