@@ -121,7 +121,8 @@ USE_TZ = True
 STATIC_URL = 'blog/static/img/'
 STATICFILES_DIRS = [
     BASE_DIR / "blog/static",
-    BASE_DIR / "blog/static/img"
+    BASE_DIR / "blog/static/img",
+    BASE_DIR / "categories/blog/static/img"
 ]
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

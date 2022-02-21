@@ -153,3 +153,8 @@ def login_request(request):
     form = AuthenticationForm()
     context = {'form': form}
     return render(request, "login.html", context)
+
+def show_categories(request):
+    categories = PostCategory.objects.all()
+    context = {"categories":categories}
+    return render(request, "categories.html", context)

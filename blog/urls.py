@@ -13,6 +13,7 @@ urlpatterns = [
     path('search_post/', views.search_post, name="search_post"),
     path('add_post/', views.add_post, name="add_post"),
     path('post_like/<int:pk>', views.like_post, name="like_post"),
+    path('categories/', views.show_categories, name="categories"),
     path('<single_slug>/', views.single_slug, name="slug_url"),
     
 ]

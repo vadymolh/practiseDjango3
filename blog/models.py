@@ -7,6 +7,10 @@ class PostCategory(models.Model):
     category_name = models.CharField(max_length=80)
     category_info = models.CharField(max_length=280)
     category_slug = models.CharField(max_length=80, default="default")
+    img = models.ImageField(upload_to='blog/static/img/categories',
+        height_field=None,
+        width_field=None,
+        max_length=100, default='')
     class Meta:
         verbose_name_plural = "Категорії"
     def __str__(self):

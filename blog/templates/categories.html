@@ -1,0 +1,27 @@
+{% extends 'navbar.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            {% for category in categories  %}
+            <div class="col s12 m5 l5">
+                <div class="card hoverable large indigo lighten-3">
+                  <div class="card-image">
+                    <img src ='/{{category.img }}'>
+                    <span class="card-title red accent-3">{{ category.category_name|upper }}</span>
+                  </div>
+                  <div class="card-content cyan-text text-darken-4">
+                    <p>{{ category.category_info|linebreaksbr|truncatechars:100 }}</p>
+                  </div>
+                  <div class="card-action">
+                    <a href="/{{ category.category_slug }}">Дивитись далі...</a>
+                  </div>
+                </div>
+              </div>
+
+            {% endfor %}
+        </div>
+    </div>
+</body>
+{% endblock %}
