@@ -3,6 +3,14 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    avatar = models.ImageField(default='blog/static/img/profile/default_avatar.jpg', 
+                               upload_to='blog/static/img/profiles')
+    about = models.TextField(max_length=500)
+    def __str__(self):
+        return self.user.username
+
 class PostCategory(models.Model):
     category_name = models.CharField(max_length=80)
     category_info = models.CharField(max_length=280)

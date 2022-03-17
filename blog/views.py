@@ -10,6 +10,7 @@ from django.http import Http404
 from .models import Post, PostCategory, Comment
 from .forms import AddPostForm, AddComment
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def paginate(request, posts):
@@ -35,6 +36,14 @@ def main_page(request):
         'sidebar': categories
     }
     return render(request, 'main_page.html', context)
+
+@login_required
+def profile(request):
+    profile = request.user.profile
+    return render(request, 'profile.html', {
+        'profile': profile
+    })
+
 
 def add_post(request):
     add_post_form=None
