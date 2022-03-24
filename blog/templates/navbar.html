@@ -50,7 +50,15 @@
         </ul>
         </div>
       </nav>
+      {% if user.is_authenticated %}
       <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+      <script>
+          document.addEventListener('DOMContentLoaded', function() {
+          var elems = document.querySelectorAll('.sidenav');
+          var instances = M.Sidenav.init(elems, {});
+                  });
+      </script>
+      {% endif %}
     
     {% block content %}
     {% endblock %}
@@ -58,11 +66,6 @@
     {% if messages %}
         {% for msg in messages %}
             <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                var elems = document.querySelectorAll('.sidenav');
-                var instances = M.Sidenav.init(elems, {});
-                 });
-
                 M.AutoInit();
                 {% if msg.tags == 'error' %}
                     M.toast({html: "{{msg}}", classes: "orange", displayLength:15000});
@@ -74,3 +77,5 @@
             </script>
         {% endfor %}
     {% endif%}
+
+  

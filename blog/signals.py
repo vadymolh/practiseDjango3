@@ -7,9 +7,10 @@ from .models import Profile
 def create_profile(sender, instance, created, **kwargs):
     """ kwargs= {'age':22, }"""
     if created:
-        Profile.object.create(user=instance)
+        Profile.objects.create(user=instance)
 
 
 @receiver(post_save, sender=User)
-def save_profile(sender, instance, **kwargs):
-    instance.profile.save()
+def save_profile(sender, instance, created, **kwargs):
+    if not created:
+        instance.profile.save()
