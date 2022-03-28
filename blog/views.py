@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.views.defaults import page_not_found
 from django.http import Http404
 from .models import Post, PostCategory, Comment
-from .forms import AddPostForm, AddComment
+from .forms import AddPostForm, AddComment, UpdateProfileForm, UpdateUserForm
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.contrib.auth.decorators import login_required
 
@@ -39,9 +39,23 @@ def main_page(request):
 
 @login_required
 def profile(request):
+    if request.method == 'POST':
+        user_form = UpdateUserForm(request.POST, instance=request.user)
+        profile_form = UpdateProfileForm(request.POST, 
+                                        request.FILES, 
+                                        instance=request.user.profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            return redirect(to='user_profile')
+    else:
+        user_form = UpdateUserForm(instance=request.user)
+        profile_form = UpdateProfileForm(instance=request.user.profile)
     profile = request.user.profile
     return render(request, 'profile.html', {
-        'profile': profile
+        'profile': profile,
+        'user_form': user_form,
+        'profile_form': profile_form
     })
 
 

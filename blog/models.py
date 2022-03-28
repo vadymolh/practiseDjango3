@@ -2,12 +2,19 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from PIL import Image
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     avatar = models.ImageField(default='blog/static/img/profile/default_avatar.jpg', 
                                upload_to='blog/static/img/profiles')
     about = models.TextField(max_length=500)
+    def save(self, *args, **kwargs):
+        super().save()
+        img = Image.open(self.avatar.path)
+        if img.height>150 or img.width>150:
+            img.thumbnail((150, 150))
+            img.save(self.avatar.path)
     def __str__(self):
         return self.user.username
 

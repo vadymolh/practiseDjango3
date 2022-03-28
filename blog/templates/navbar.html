@@ -13,9 +13,9 @@
     <ul id="slide-out" class="sidenav">
         <li><div class="user-view">
             <div class="background">
-              <img src={{user.profile.avatar}}>
+              <img src="/{{user.profile.avatar}}">
             </div>
-            <a href="#user"><img class="circle" src={{user.profile.avatar}}></a>
+            <a href="#user"><img class="circle" src="/{{user.profile.avatar}}"></a>
             <a href="#name"><span class="white-text name">{{user.username}}</span></a>
             <a href="#email"><span class="white-text email">{{user.email}}</span></a>
           </div></li>
@@ -39,9 +39,9 @@
             </li>
             <li class="yellow-text text-darken-4"><a href="/">Home</a></li>
             {% if not user.is_authenticated %}
-            <li class="yellow-text text-darken-4"><a href="/login">Увійти</a></li>
+                <li class="yellow-text text-darken-4"><a href="/login">Увійти</a></li>
             {% else %}
-            <li class="yellow-text text-darken-4"><a href="/add_post">Моя стаття</a></li>
+                <li class="yellow-text text-darken-4"><a href="/add_post">Моя стаття</a></li>
             
             {% endif %}
             <li class="yellow-text text-darken-4"><a href="/register">Зареєструватися</a></li>

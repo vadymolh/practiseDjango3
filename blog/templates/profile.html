@@ -7,5 +7,15 @@
             <h1>Профіль користувача {{user.username}}</h1>
             <img class="center-align responsive-img" src ='/{{profile.avatar}}'>
         </div>
+        <div class="row">
+            <form action="/profile/" method="POST"
+            enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ profile_form.as_p}}
+                {{ user_form.as_p }}
+                <button class="btn waves-effect waves-light" type="submit">Змінити данні профілю 
+                    <i class="material-icons">add</i></button>
+            </form>
+        </div>
     </div>
 {% endblock %}
