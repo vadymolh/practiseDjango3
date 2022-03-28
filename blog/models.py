@@ -7,8 +7,10 @@ from PIL import Image
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     avatar = models.ImageField(default='blog/static/img/profile/default_avatar.jpg', 
-                               upload_to='blog/static/img/profiles')
-    about = models.TextField(max_length=500)
+                               upload_to='blog/static/img/profiles',
+                               verbose_name='Картинка профілю')
+    about = models.TextField(max_length=500, verbose_name="Про себе", 
+                             blank=True)
     def save(self, *args, **kwargs):
         super().save()
         img = Image.open(self.avatar.path)

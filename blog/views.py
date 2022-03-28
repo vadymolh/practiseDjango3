@@ -8,7 +8,9 @@ from django.contrib import messages
 from django.views.defaults import page_not_found
 from django.http import Http404
 from .models import Post, PostCategory, Comment
-from .forms import AddPostForm, AddComment, UpdateProfileForm, UpdateUserForm
+from .forms import AddPostForm, AddComment, \
+                   UpdateProfileForm, UpdateUserForm, \
+                   RegisterForm
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.contrib.auth.decorators import login_required
 
@@ -142,7 +144,7 @@ def single_slug(request, single_slug):
 
 def register(request):
     if request.method =="POST":
-        form = UserCreationForm(request.POST)
+        form = RegisterForm(request.POST)
         if form.is_valid():
             print("Sucsess IN REGISTER!!!")
             user = form.save()
@@ -155,7 +157,7 @@ def register(request):
             for msg in form.error_messages:
                 messages.error(request, f"{msg} : {form.error_messages[msg]} ")
             return render(request, 'register.html', context={'form': form})
-    form = UserCreationForm
+    form = RegisterForm
     context = {'form': form}
     return render(request, 'register.html', context)
 
