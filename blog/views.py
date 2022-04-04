@@ -7,7 +7,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.views.defaults import page_not_found
 from django.http import Http404
-from .models import Post, PostCategory, Comment
+from .models import Post, PostCategory, Comment, Profile
 from .forms import AddPostForm, AddComment, \
                    UpdateProfileForm, UpdateUserForm, \
                    RegisterForm
@@ -49,6 +49,7 @@ def profile(request):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
+            messages.success(request, f"Профіль оновлено")
             return redirect(to='user_profile')
     else:
         user_form = UpdateUserForm(instance=request.user)
@@ -59,6 +60,14 @@ def profile(request):
         'user_form': user_form,
         'profile_form': profile_form
     })
+
+def look_profile(request, profile):
+    profile = Profile.objects.get(user__username=profile)
+    if profile == request.user.profile:
+        return redirect(to='user_profile')
+    return render(request, "look_profile.html",
+                 {'profile': profile,}
+                  )
 
 
 def add_post(request):
