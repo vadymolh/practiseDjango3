@@ -58,8 +58,35 @@
     </div>
 
 </div>
+<script>
+    let message_send_btd = document.getElementById('send-btn');
+    let message_input = document.getElementById('message-input');
+    function send_message(){
+        let message = message_input.value;
+        if (message === ""){
+            return;
+        }
+        message_input.value = "";
+        fetch("{% url 'chatroom-ajax' other_user.id%}", 
+        {
+            method: "POST",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{% csrf_token %}"
+            },
+            body: JSON.stringify(message)
+        }).then(resp => resp.json()).then(messages => {
+                for (message in messages){
+                    show_message(message);
+                }           
+            }
+        );
+    }
 
-
-
+    function show_message(message){
+        
+    }
+</script>
 
 {%endblock%}

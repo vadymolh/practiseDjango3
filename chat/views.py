@@ -1,8 +1,11 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
+from django.http.response import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.contrib.humanize.templatetags.humanize import naturaltime
 from .models import Message
+import json
 
 @login_required
 def load_messages(request, pk):
@@ -17,3 +20,33 @@ def load_messages(request, pk):
         "users": User.objects.all()
     }
     return render(request, "chatroom.html", context)
+
+def load_messages_ajax(request, pk):
+    other_user = get_object_or_404(User, pk=pk)
+    messages = Message.objects.filter(seen=False, 
+                                      receiver=request.user)
+    message_list = []
+    for message in messages:
+        message_list.append({"sender": message.sender.username,
+                             "message": message.message,
+                             "sent": message.sender==request.user,
+                             "date_created": naturaltime(message.date_created)})
+        message.seen = True
+        message.save()
+    if request.method =="POST":
+        message = request.POST.get("message")
+        message = json.loads(message)
+        if message:
+            m = Message.objects.create(
+                sender=request.user,
+                receiver=other_user,
+                message=message
+            )
+            message_list.append(
+                {"sender": request.user.username,
+                 "message": message,
+                 "sent": True,
+                 "date_created": naturaltime(m.date_created)}
+            )
+    print(message_list)
+    return JsonResponse(message_list, safe=False)
