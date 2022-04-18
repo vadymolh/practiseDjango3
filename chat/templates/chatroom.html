@@ -36,6 +36,7 @@
                   </span>
                 </div>
             </div>
+            <div id="messages" class="row valign-wrapper">
             {% for message in messages %}
                 <div class="card-panel teal lighten-2">
                     {{message.sender.username}}
@@ -43,6 +44,8 @@
                 <div class="card-panel teal lighten-2">
                     {{message.message}}
                 </div>
+
+            </div>
             {% endfor %}
             <div class="row">
                 <div class="input-field col s10">
@@ -67,13 +70,13 @@
             return;
         }
         message_input.value = "";
-        fetch("{% url 'chatroom-ajax' other_user.id%}", 
+        fetch("{% url 'chatroom-ajax' other_user.id %}", 
         {
             method: "POST",
             credentials: "same-origin",
             headers: {
                 "Content-Type": "application/json",
-                "X-CSRFToken": "{% csrf_token %}"
+                "X-CSRFToken": "{{ csrf_token }}"
             },
             body: JSON.stringify(message)
         }).then(resp => resp.json()).then(messages => {
@@ -83,10 +86,43 @@
             }
         );
     }
+    function load_messages(){
+        fetch("{% url 'chatroom-ajax' other_user.id%}", {
+            method: "GET",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            }
+        }).then(resp => resp.json()).then(messages => {
+            for (message in messages){
+                show_message(message);
+            }
+        });
+    }
+            
+        
+
+   
 
     function show_message(message){
-        
-    }
+        let message_container = document.getElementById('messages');
+        let class_name = "left";
+        if (message.sent){
+            class_name = "right";
+        }
+        let div = document.createElement('div');
+        div.classList.add("card-panel" + class_name);
+        div.innerHTML = `<div class="card-panel teal lighten-2">
+                            ${ message.sender }                        </div>
+                        <div class="card-panel teal lighten-2">
+                            ${ message.message }
+                        </div>`;
+        message_container.appendChild(div);
+        div.scrollIntoView();
+    } 
+    message_send_btd.addEventListener('click', send_message);  
+    setInterval(load_messages, 2000);
 </script>
 
 {%endblock%}
