@@ -14,6 +14,9 @@ def load_messages(request, pk):
         Q(receiver=request.user, sender=other_user)
     )
     messages.update(seen=True)
+    messages = messages | Message.objects.filter(
+        Q(receiver=other_user, sender=request.user)
+    )
     context = {
         "other_user": other_user,
         "user_messages": messages,
@@ -34,9 +37,9 @@ def load_messages_ajax(request, pk):
                              "sent": message.sender==request.user,
                              "date_created": naturaltime(message.date_created)})
         message.seen = True
-        message.save()
+    messages.update(seen=True)
     if request.method =="POST":
-        message = json.loads(request.body)
+        message = json.loads(request.body)["message"]
         print (message)
         if message:
             m = Message.objects.create(
@@ -44,13 +47,14 @@ def load_messages_ajax(request, pk):
                 receiver=other_user,
                 message=message
             )
-            m.save()
+            #m.save()
             message_list.append(
                 {"sender": request.user.username,
                 "username": request.user.username,
-                 "message": message,
+                 "message": m.message,
                  "sent": True,
                  "date_created": naturaltime(m.date_created)}
             )
+    print(len(message_list))
     print(message_list)
     return JsonResponse(message_list, safe=False)

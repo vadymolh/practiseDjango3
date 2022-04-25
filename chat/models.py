@@ -16,3 +16,5 @@ class Message(models.Model):
     date_created = models.DateTimeField(default=timezone.now)
     class Meta:
         ordering = ('date_created', )
+    def __str__(self):
+        return self.message

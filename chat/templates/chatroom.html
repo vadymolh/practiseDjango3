@@ -22,31 +22,47 @@
     </div>
 
     <div class="col s8 m10 l10">
+        <div class="row valign-wrapper">
+            <div class="col s10">
+                <a href="{% url 'look_profile' other_user.username %}">
+                    <img src="/{{other_user.profile.avatar}}" alt="" class="circle responsive-img">
+                </a>
+            </div>
+            <div class="col s8">
+              <span class="black-text">
+                <a href="{% url 'look_profile' other_user.username %}">{{other_user.username}}</a>
+               
+              </span>
+            </div>
+        </div>
         <div id="message-area" class="col s8 m10 l10">
-            <div class="row valign-wrapper">
-                <div class="col s10">
-                    <a href="{% url 'look_profile' other_user.username %}">
-                        <img src="/{{other_user.profile.avatar}}" alt="" class="circle responsive-img">
-                    </a>
-                </div>
-                <div class="col s8">
-                  <span class="black-text">
-                    <a href="{% url 'look_profile' other_user.username %}">{{other_user.username}}</a>
-                   
-                  </span>
-                </div>
-            </div>
-            <div id="messages" class="row valign-wrapper">
-            {% for message in messages %}
+            
+            
+            <div id="messages" class="row">
+            {% for message in user_messages %}
+            <div class="col s12 m12 l12">
                 <div class="card-panel teal lighten-2">
-                    {{message.sender.username}}
-                </div>
-                <div class="card-panel teal lighten-2">
-                    {{message.message}}
-                </div>
-
+                    <div class="card-content">
+                        <p class="left" >{{message.sender.username}}</p> 
+                        <p class="left">{{message.message}}</p> 
+                    </div>
+                </div>   
             </div>
+            
             {% endfor %}
+            {% for message in messages %}
+            <div class="col s12 m12 l12">
+                <div class="card-panel teal lighten-2">
+                    <div class="card-content">
+                        <p class="left" >{{message.sender.username}}</p> 
+                        <p class="left">{{message.message}}</p> 
+                    </div>
+                </div>   
+            </div>
+
+            
+            {% endfor %}
+            </div>
             <div class="row">
                 <div class="input-field col s10">
                   <input id="message-input" type="text" data-length="1000">
@@ -78,13 +94,14 @@
                 "Content-Type": "application/json",
                 "X-CSRFToken": "{{ csrf_token }}"
             },
-            body: JSON.stringify(message)
+                body: JSON.stringify({"message": message})
         }).then(resp => resp.json()).then(messages => {
-                for (message in messages){
+            console.log("MESSAGES", messages);    
+            for (message of messages){
                     show_message(message);
                 }           
             }
-        );
+        ).catch(e => console.log("Error in fetch: " + e));
     }
     function load_messages(){
         fetch("{% url 'chatroom-ajax' other_user.id%}", {
@@ -95,7 +112,8 @@
                 "X-CSRFToken": "{{ csrf_token }}"
             }
         }).then(resp => resp.json()).then(messages => {
-            for (message in messages){
+            for (message of messages){
+                console_log("message: " + message);
                 show_message(message);
             }
         });
@@ -106,23 +124,28 @@
    
 
     function show_message(message){
+        console.log('loading...');
+        console.log(message);
         let message_container = document.getElementById('messages');
         let class_name = "left";
         if (message.sent){
             class_name = "right";
         }
         let div = document.createElement('div');
-        div.classList.add("card-panel" + class_name);
-        div.innerHTML = `<div class="card-panel teal lighten-2">
-                            ${ message.sender }                        </div>
-                        <div class="card-panel teal lighten-2">
-                            ${ message.message }
-                        </div>`;
+        div.classList.add("card-panel " + class_name);
+        div.innerHTML = `<div class="col s12 m12 l12">
+                <div class="card-panel teal lighten-2">
+                    <div class="card-content">
+                    <p class="left" > ${ message.sender }</p> 
+                    <p class="left">${ message.message }</p> 
+                    </div>
+                </div>   
+            </div>`;
         message_container.appendChild(div);
         div.scrollIntoView();
     } 
     message_send_btd.addEventListener('click', send_message);  
-    setInterval(load_messages, 2000);
+    setInterval(load_messages, 5000);
 </script>
 
 {%endblock%}
