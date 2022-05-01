@@ -11,11 +11,10 @@ def unread_msg_num(request):
     if request.user.is_authenticated:
         # Get all messages that are unread and are not sent by the current user
         unread_messages = Message.objects.filter(
-            Q(seen=True) & Q(sender__is_active=True) & Q(sender=request.user)
+            Q(seen=False) & Q(sender__is_active=True) & Q(sender=request.user)
             & Q(receiver__is_active=True) & Q(receiver__id=request.user.id)
         )
         unread_messages_count = unread_messages.count()
-        print("UNREAD MESSAGES COUNT: ", unread_messages_count)
         return unread_messages_count
 
 
