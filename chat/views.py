@@ -7,6 +7,18 @@ from django.contrib.humanize.templatetags.humanize import naturaltime
 from .models import Message
 import json
 
+def unread_msg_num(request):
+    if request.user.is_authenticated:
+        # Get all messages that are unread and are not sent by the current user
+        unread_messages = Message.objects.filter(
+            Q(seen=True) & Q(sender__is_active=True) & Q(sender=request.user)
+            & Q(receiver__is_active=True) & Q(receiver__id=request.user.id)
+        )
+        unread_messages_count = unread_messages.count()
+        print("UNREAD MESSAGES COUNT: ", unread_messages_count)
+        return unread_messages_count
+
+
 @login_required
 def load_messages(request, pk):
     other_user = get_object_or_404(User, pk=pk)
@@ -17,10 +29,12 @@ def load_messages(request, pk):
     messages = messages | Message.objects.filter(
         Q(receiver=other_user, sender=request.user)
     )
+    msg_num = unread_msg_num(request)
     context = {
         "other_user": other_user,
         "user_messages": messages,
-        "users": User.objects.all()
+        "users": User.objects.all(),
+        "msg_num": msg_num,
     }
     return render(request, "chatroom.html", context)
 

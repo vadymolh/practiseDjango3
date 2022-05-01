@@ -13,6 +13,7 @@ from .forms import AddPostForm, AddComment, \
                    RegisterForm
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.contrib.auth.decorators import login_required
+from chat.views import unread_msg_num
 
 # Create your views here.
 def paginate(request, posts):
@@ -33,9 +34,11 @@ def main_page(request):
     else: posts = ""
     categories = PostCategory.objects.all()
     posts = paginate(request, list(posts))
+    msg_num = unread_msg_num(request)
     context = {
         'posts': posts,
-        'sidebar': categories
+        'sidebar': categories,
+        'msg_num': msg_num
     }
     return render(request, 'main_page.html', context)
 
