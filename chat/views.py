@@ -60,13 +60,14 @@ def load_messages_ajax(request, pk):
                 receiver=other_user,
                 message=message
             )
-            #m.save()
-            message_list.append(
-                {"sender": request.user.username,
+            m.save()
+            message_list.append({
+                "sender": request.user.username,
                 "username": request.user.username,
-                 "message": m.message,
-                 "sent": True,
-                 "date_created": naturaltime(m.date_created)}
+                "message": m.message,
+                "sent": True,
+                "date_created": naturaltime(m.date_created)
+                }
             )
     print(len(message_list))
     print(message_list)

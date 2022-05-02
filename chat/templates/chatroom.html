@@ -3,7 +3,6 @@
 {% block content %}
 <h1>CHAT</h1>
 <div class="row">
-
     <div class="col s4 m2 l2">
         {% for user_ in users %}
         <div class="row valign-wrapper">
@@ -41,10 +40,11 @@
             <div id="messages" class="row">
             {% for message in user_messages %}
             <div class="col s12 m12 l12">
-                <div class="card-panel teal lighten-2">
+                <div class="card-panel {% if request.user == message.sender %} left teal lighten-2{% else %} right red lighten-2{%endif%}">
                     <div class="card-content">
-                        <p class="left" >{{message.sender.username}}</p> 
-                        <p class="left">{{message.message}}</p> 
+                        <span class="card-title">{{message.sender.username}}</span>
+                        <p>{{message.message}}</p>
+                        <p>{{message.date_created}}</p>
                     </div>
                 </div>   
             </div>
@@ -128,21 +128,23 @@
         console.log('loading...');
         console.log(message);
         let message_container = document.getElementById('messages');
-        let class_name = "left";
+        let class_name = "right";
         if (message.sent){
-            class_name = "right";
+            class_name = "left";
         }
+        let parent_div = document.createElement('div');
+        parent_div.className = "col s12 m12 l12";
         let div = document.createElement('div');
-        div.classList.add("card-panel " + class_name);
-        div.innerHTML = `<div class="col s12 m12 l12">
-                <div class="card-panel teal lighten-2">
+        div.classList.add("card-panel", class_name, "teal", "lighten-2");
+        div.innerHTML = `
                     <div class="card-content">
-                    <p class="left" > ${ message.sender }</p> 
-                    <p class="left">${ message.message }</p> 
+                    <span class="card-title">${ message.sender }</span>
+                    <p>${ message.message }</p>
+                    <span>${ message.date_created }</span> 
                     </div>
-                </div>   
-            </div>`;
-        message_container.appendChild(div);
+                `;
+        parent_div.appendChild(div);
+        message_container.appendChild(parent_div);
         div.scrollIntoView();
     } 
     message_send_btd.addEventListener('click', send_message);  
