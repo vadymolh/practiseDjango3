@@ -1,6 +1,14 @@
 {% extends 'navbar.html' %}
 
 {% block content %}
+<script> 
+    M.AutoInit();
+    document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.collapsible');
+    console.log(elems);
+    var instances = M.Collapsible.init(elems);
+    });
+  </script>
     <div class="container">
         <form method="POST">
             {% csrf_token %}

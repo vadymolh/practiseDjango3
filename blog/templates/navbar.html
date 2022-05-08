@@ -51,15 +51,38 @@
             <li class="yellow-text text-darken-4"><a href="/logout">Вийти</a></li>
             
         </ul>
+        <a class='dropdown-trigger btn show-on-small show-on-medium hide-on-med-and-up' href='#' data-target='dropdown1'>Menu</a>
+        <ul class="dropdown-content" id="dropdown1">
+           
+            <li class="yellow-text text-darken-4"><a href="/">Home</a></li>
+            {% if not user.is_authenticated %}
+                <li class="yellow-text text-darken-4"><a href="/login">Увійти</a></li>
+            {% else %}
+                <li class="yellow-text text-darken-4"><a href="/add_post">Моя стаття</a></li>
+            
+            {% endif %}
+            <li class="yellow-text text-darken-4"><a href="/register">Зареєструватися</a></li>
+            <li class="yellow-text text-darken-4"><a href="/logout">Вийти</a></li>
+        </ul>
         </div>
       </nav>
     </div>
+    `<script> 
+        M.AutoInit();
+        document.addEventListener('DOMContentLoaded', function() {
+        var elems = document.querySelectorAll('.collapsible');
+        console.log(elems);
+        var instances = M.Collapsible.init(elems);
+        });
+      </script>
       {% if user.is_authenticated %}
       <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <script>
-          document.addEventListener('DOMContentLoaded', function() {
+           document.addEventListener('DOMContentLoaded', function() {
           var elems = document.querySelectorAll('.sidenav');
           var instances = M.Sidenav.init(elems, {});
+          var el2 = document.querySelectorAll('.dropdown-trigger');
+          var drop_init = M.Dropdown.init(el2, {"closeOnClick": false, "constrainWidth": false});
                   });
       </script>
       {% endif %}

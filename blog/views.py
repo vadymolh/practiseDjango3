@@ -35,6 +35,7 @@ def main_page(request):
     categories = PostCategory.objects.all()
     posts = paginate(request, list(posts))
     msg_num = unread_msg_num(request)
+    print("NEW MSG: ", msg_num)
     context = {
         'posts': posts,
         'sidebar': categories,
