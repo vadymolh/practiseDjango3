@@ -4,13 +4,14 @@
     <meta charset='utf-8'>
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="{% static 'css/materialize.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sidenav.css' %}">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <title>BLOG</title>
 </head>
 <body >
-    <ul id="slide-out" class="sidenav">
+    <ul id="slide-out" class="sidenav fixed">
         <li><div class="user-view">
             <div class="background">
               <img src="/{{user.profile.avatar}}">

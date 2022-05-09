@@ -11,12 +11,14 @@ def unread_msg_num(request):
     if request.user.is_authenticated:
         # Get all messages that are unread and are not sent by the current user
         unread_messages = Message.objects.filter(
-            Q(seen=False) & Q(sender__is_active=True) & Q(sender=request.user)
-            & Q(receiver__is_active=True) & Q(receiver__id=request.user.id)
+            Q(seen=False) & Q(receiver=request.user)
         )
         unread_messages_count = unread_messages.count()
         return unread_messages_count
 
+@login_required
+def load_messages_home(request):
+    return load_messages(request, request.user.pk)
 
 @login_required
 def load_messages(request, pk):
@@ -29,10 +31,12 @@ def load_messages(request, pk):
         Q(receiver=other_user, sender=request.user)
     )
     msg_num = unread_msg_num(request)
+    #all_msg = Message.objects.all()
+    users = User.objects.all()
     context = {
         "other_user": other_user,
         "user_messages": messages,
-        "users": User.objects.all(),
+        "users": users,
         "msg_num": msg_num,
     }
     return render(request, "chatroom.html", context)
@@ -41,7 +45,8 @@ def load_messages(request, pk):
 def load_messages_ajax(request, pk):
     other_user = get_object_or_404(User, pk=pk)
     messages = Message.objects.filter(seen=False, 
-                                      receiver=request.user)
+                                      receiver=request.user,
+                                      sender=other_user)
     message_list = []
     print ("Messages:")
     for message in messages:

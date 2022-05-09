@@ -1,9 +1,10 @@
 {% extends 'navbar.html' %}
 
 {% block content %}
-<h1>CHAT</h1>
+
 <div class="row">
-    <div class="col s4 m2 l2">
+    
+    <div class="col s4 m2 l2 sidenav-fixed">
         {% for user_ in users %}
         <div class="row valign-wrapper">
             <div class="col s4">
@@ -20,7 +21,9 @@
         {%endfor%}
     </div>
 
-    <div class="col s8 m10 l10">
+    <div class="container">
+        <div class="container">
+    <div class="col s8 m12 l12">
         <div class="row valign-wrapper">
             <div class="col s10">
                 <a href="{% url 'look_profile' other_user.username %}">
@@ -34,7 +37,7 @@
               </span>
             </div>
         </div>
-        <div id="message-area" class="col s8 m10 l10">
+        <div id="message-area" class="col s8 m12 l12">
             
             
             <div id="messages" class="row">
@@ -75,11 +78,15 @@
             </div>
         </div>
     </div>
+</div>
+</div>
+
 
 </div>
 <script>
     let message_send_btd = document.getElementById('send-btn');
     let message_input = document.getElementById('message-input');
+    message_input.scrollIntoView()
     function send_message(){
         let message = message_input.value;
         if (message === ""){
@@ -148,6 +155,11 @@
         div.scrollIntoView();
     } 
     message_send_btd.addEventListener('click', send_message);  
+    document.addEventListener('keypress', (e) => {
+        if (e.key === "Enter"){
+            send_message();
+        }
+    });
     setInterval(load_messages, 5000);
 </script>
 

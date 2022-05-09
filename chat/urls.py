@@ -4,6 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    path('', views.load_messages_home),
     path('<int:pk>', views.load_messages),
     path('ajax/<int:pk>', views.load_messages_ajax, 
          name="chatroom-ajax"),
