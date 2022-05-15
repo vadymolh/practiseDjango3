@@ -32,7 +32,15 @@ def load_messages(request, pk):
     )
     msg_num = unread_msg_num(request)
     #all_msg = Message.objects.all()
-    users = User.objects.all()
+    users = User.objects.all() # [(12, user1),(12, user2),()]
+    count_msg_users = []
+    for usr in users:
+        msg_count_received = usr.sent_messages.filter(receiver=request.user).count()
+        msg_count_sent = usr.received_messages.filter(sender=request.user).count()
+        msg_count = msg_count_received + msg_count_sent
+        count_msg_users.append((msg_count, usr))
+    count_msg_users.sort(key=lambda el: el[0],reverse=True)   
+    users = [usr[1] for usr in count_msg_users] 
     context = {
         "other_user": other_user,
         "user_messages": messages,
