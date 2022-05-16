@@ -22,6 +22,8 @@ def load_messages_home(request):
     if request.method == "POST":
         searched = request.POST.get('searchuser')
         users = User.objects.filter(username__icontains=searched)    
+        if users.count()>0:
+            return load_messages(request, users[0].pk, users)
     return load_messages(request, request.user.pk, users)
 
 @login_required
