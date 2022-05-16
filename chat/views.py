@@ -18,10 +18,14 @@ def unread_msg_num(request):
 
 @login_required
 def load_messages_home(request):
-    return load_messages(request, request.user.pk)
+    users = None
+    if request.method == "POST":
+        searched = request.POST.get('searchuser')
+        users = User.objects.filter(username__icontains=searched)    
+    return load_messages(request, request.user.pk, users)
 
 @login_required
-def load_messages(request, pk):
+def load_messages(request, pk, users=None):
     other_user = get_object_or_404(User, pk=pk)
     messages = Message.objects.filter(
         Q(receiver=request.user, sender=other_user)
@@ -31,9 +35,10 @@ def load_messages(request, pk):
         Q(receiver=other_user, sender=request.user)
     )
     msg_num = unread_msg_num(request)
-    #all_msg = Message.objects.all()
-    users = User.objects.all() # [(12, user1),(12, user2),()]
-    count_msg_users = []
+    print ("TESTTEST", users)
+    if not users:
+        users = User.objects.all() 
+    count_msg_users = []   # [(12, user1),(3, user2),()]
     for usr in users:
         msg_count_received = usr.sent_messages.filter(receiver=request.user).count()
         msg_count_sent = usr.received_messages.filter(sender=request.user).count()
@@ -48,6 +53,10 @@ def load_messages(request, pk):
         "msg_num": msg_num,
     }
     return render(request, "chatroom.html", context)
+
+
+def search_user(request):
+    return load_messages_home(request)
 
 @login_required
 def load_messages_ajax(request, pk):
